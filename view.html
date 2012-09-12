@@ -1,0 +1,111 @@
+<html>
+	<head>
+		<meta charset = "utf-8">
+		<META   HTTP-EQUIV= "refresh"   CONTENT= "10">
+		<title>View Status</title>
+		<style type="text/css">
+			table { border-collapse:collapse; margin: 20px;}
+			table td, table th { border:1px solid black;padding:5px; }
+		</style>
+		<!-- jQuery -->
+   		<script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.1.min.js"></script>
+   		<script type="text/javascript">
+   			$(document).ready(function(){
+   				!function($){
+   					$.ajax({
+   						dataType: 'jsonp',
+   						url: 'http://api.jijinhao.com/realtime/quotecb.htm?codes=JO_42761',
+   						success: function(response){
+   							console.log(response[0].data[0]);
+   							$('#title').html(response[0].data[0].quote.q67);
+   							$('#buyprice').html(response[0].data[0].quote.q74);
+   							$('#sellprice').html(response[0].data[0].quote.q73);
+							$('#highestprice').html(response[0].data[0].quote.q71);
+   							$('#lowestprice').html(response[0].data[0].quote.q72);
+   							$('#currentprice').html(response[0].data[0].quote.q69);
+
+   							var amount1 = 0;
+   							var amount2 = 0;
+   							var totalprice1 = 0;
+   							var totalprice2 = 0;
+
+   							for(var i = 0;i < $('#positive td.price').length; i++){
+   								var tempamount = parseInt($($('#positive td.amount')[i]).text());
+   								var tempprice = parseFloat($($('#positive td.price')[i]).text());
+
+   								amount1 += tempamount;
+   								totalprice1 += tempprice * tempamount;
+
+   								var tempprofit = (parseFloat(response[0].data[0].quote.q74)-tempprice) * tempamount;
+
+   								$($('#positive td.profit')[i]).html(tempprofit.toFixed(2));
+   							}
+
+   							for(var i = 0;i < $('#negative td.price').length; i++){
+   								var tempamount = parseInt($($('#negative td.amount')[i]).text());
+   								var tempprice = parseFloat($($('#negative td.price')[i]).text());
+
+   								amount2 += tempamount;
+   								totalprice2 += tempprice * tempamount;
+
+   								var tempprofit = (parseFloat(response[0].data[0].quote.q73)-tempprice) * tempamount;
+
+   								$($('#negative td.profit')[i]).html(tempprofit.toFixed(2));
+   							}
+
+   							var profit1 = amount1 * parseFloat(response[0].data[0].quote.q74) - totalprice1;
+   							var profit2 = amount2 * parseFloat(response[0].data[0].quote.q73) - totalprice2;
+   							$('#profit').html(profit1 + ' : ' + profit2);
+   							$('#refreshedtime').html(response[0].data[0].quote.q59);
+   							document.title = response[0].data[0].quote.q74 + ' : ' + profit1 + ' | ' + response[0].data[0].quote.q73 + ' : ' + profit2;
+   						} 
+   					});
+   				}(jQuery);
+   			});
+   		</script>
+	</head>
+	<body>
+		<div>
+			当前盈利: <span id = 'profit'></span>
+		</div>
+		<div>
+			刷新时间: <span id ='refreshedtime'></span>
+		</div>
+		<div style="float:left;">
+			<table>
+				<tr><td colspan='2' id = 'title'></td></tr>
+				<tr><td>银行买入价</td><td id= 'buyprice'></td></tr>
+				<tr><td>银行卖出价</td><td id= 'sellprice'></td></tr>
+				<tr><td>最高中间价</td><td id= 'highestprice'></td></tr>
+				<tr><td>最低中间价</td><td id= 'lowestprice'></td></tr>
+				<tr><td>中间价</td><td id= 'currentprice'></td></tr>
+			</table>
+		</div>
+		<div style="float:left;">
+			<table id = 'positive'>
+				<tr>
+					<td>买入价</td>
+					<td>数量</td>
+					<td>盈利</td>
+				</tr>
+				<tr><td class = 'price'>6.82</td><td class = 'amount'>1000</td><td class='profit'></td></tr>
+				<tr><td class = 'price'>6.81</td><td class = 'amount'>1000</td><td class='profit'></td></tr>
+				<tr><td class = 'price'>6.80</td><td class = 'amount'>2000</td><td class='profit'></td></tr>
+				<tr><td class = 'price'>6.70</td><td class = 'amount'>1000</td><td class='profit'></td></tr>
+				<tr><td class = 'price'>6.65</td><td class = 'amount'>1000</td><td class='profit'></td></tr>
+				<tr><td class = 'price'>6.60</td><td class = 'amount'>1000</td><td class='profit'></td></tr>
+			</table>
+		</div>
+		<div style="float:left;">
+			<table id = 'negative'>
+				<tr>
+					<td>卖出价</td>
+					<td>数量</td>
+					<td>盈利</td>
+				</tr>
+				<tr><td class = 'price'>6.90</td><td class = 'amount'>-1000</td><td class='profit'></td></tr>
+			</table>
+		</div>
+		
+	</body>
+</html>
