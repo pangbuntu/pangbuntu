@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+    <!-- jQuery -->
+   	<script type="text/javascript" charset="utf8" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+   	<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+    	// Load the Visualization API and the column chart package.
+    	google.load("visualization", "1", {packages:["corechart"]});
+
+    	// Set a callback to run when the Google Visualization API is loaded.
+    	google.setOnLoadCallback(drawChart);
+
+    	// The callback function
+    	function drawChart(){
+    		$.ajax({
+    			url: "/data/passrate.json",
+    			dataType: 'json',
+    			async: false,
+    			success: function (json){
+    				console.log(json);
+    				var data = new google.visualization.DataTable(json);
+
+				    //Instantiate and draw our chart, passing in some options.
+				    var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+				    chart.draw(data, 
+				    	{	title: "Pass Rate Statistics",
+                            width: 1200, 
+				    		height: 600,
+				    		vAxis:  { baseline: 0.3,
+				    				  maxValue: 1,
+				    				  minValue:0,
+				    				  format:'##.##%',
+				    				  gridlines: {count:11}
+				    			    },
+                            hAxis:  { textStyle: {fontSize:13},
+                                      minTextSpacing: 0
+                                    }              
+				    	});
+    			}
+    		});
+    	}
+
+    </script>
+</head>
+<body>
+    <div id="chart_div"></div>
+</body>
+</html>
